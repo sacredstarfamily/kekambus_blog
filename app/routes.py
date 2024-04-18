@@ -30,8 +30,8 @@ def create_user():
         return {'error': f"{', '.join(missing_fields)} must be in the request body"}, 400
 
     # Pull the individual data from the body
-    first_name = data.get('firstName')
-    last_name = data.get('lastName')
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
