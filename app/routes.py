@@ -21,7 +21,7 @@ def create_user():
     data = request.json
 
     # Validate that the data has all of the required fields
-    required_fields = ['firstName', 'lastName', 'username', 'email', 'password']
+    required_fields = ['first_name', 'last_name', 'username', 'email', 'password']
     missing_fields = []
     for field in required_fields:
         if field not in data:
