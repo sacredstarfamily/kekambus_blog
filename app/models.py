@@ -64,8 +64,7 @@ class Post(db.Model):
     # In SQL - user_id INTEGER NOT NULL, FOREIGN KEY(user_id) REFERENCES user(id)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     author = db.relationship('User', back_populates='posts')
-    comments = db.relationship('Comment', back_populates='user')
-
+    comments = db.relationship('Comment', back_populates='post')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -78,6 +77,10 @@ class Post(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -87,10 +90,7 @@ class Post(db.Model):
             "author": self.author.to_dict(),
             "comments": [comment.to_dict() for comment in self.comments]
         }
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-    
+
     def update(self, **kwargs):
         allowed_fields = {'title', 'body'}
 
@@ -98,7 +98,9 @@ class Post(db.Model):
             if key in allowed_fields:
                 setattr(self, key, value)
         self.save()
-        
+
+
+# Create our Comment class/table
 class Comment(db.Model):
     # CREATE TABLE
     id = db.Column(db.Integer, primary_key=True)
@@ -108,24 +110,24 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
     user = db.relationship('User',back_populates='comments')
     post = db.relationship('Post',back_populates='comments')
-    
-    
+
+
     # INSERT INTO
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.save()
-        
+
     def __repr__(self):
         return f"<Comment {self.id}>"
     
     def save(self):
         db.session.add(self)
         db.session.commit()
-        
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
-        
+
     def to_dict(self):
         return {
             'id': self.id,
