@@ -142,6 +142,7 @@ def edit_post(post_id):
     return post.to_dict()
 
 @app.route('/posts/<int:post_id>', methods=['DELETE'])
+@token_auth.login_required
 def delete_post(post_id):
     post = db.session.get(Post, post_id)
     if post is None:
